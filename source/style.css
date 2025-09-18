@@ -1,0 +1,160 @@
+/* Base Styles */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #f4f6f8;
+  color: #333;
+}
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+header h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+  color: #222;
+}
+
+/* Card Styles */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* Bank Cards */
+.bank-card {
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 15px;
+  border-left: 4px solid #4a90e2;
+}
+.bank-card:hover {
+  background: #f1f3f6;
+}
+.bank-row h4 {
+  margin: 0 0 5px 0;
+}
+.bank-row .small {
+  color: #555;
+  font-size: 13px;
+}
+
+/* Bank Details Flex */
+.bank-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+.account-number {
+  width: 200px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #222;
+  text-align: left;
+  word-break: break-all;
+}
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+/* Buttons */
+.btn {
+  background: #4a90e2;
+  color: #fff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+.btn:hover {
+  background: #357ab8;
+  transform: translateY(-2px);
+}
+
+/* Contact Section */
+.contact-item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 15px;
+  gap: 10px;
+}
+.contact-label {
+  font-weight: 600;
+  min-width: 60px;
+  color: #333;
+}
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f3f6;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+.contact-info a {
+  color: #4a90e2;
+  font-weight: 500;
+  text-decoration: none;
+}
+.contact-info a:hover {
+  text-decoration: underline;
+}
+.contact-info .btn-copy {
+  background: #4a90e2;
+  color: #fff;
+  padding: 5px 12px;
+  font-size: 0.95rem;
+}
+.contact-info .btn-copy:hover {
+  background: #357ab8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .account-number {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .button-group {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .bank-details {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  header h1 {
+    font-size: 1.7rem;
+  }
+}
+@media (max-width: 480px) {
+  .btn {
+    padding: 5px 12px;
+    font-size: 0.9rem;
+  }
+}

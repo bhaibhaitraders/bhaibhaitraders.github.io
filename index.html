@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank & Contact Info</title>
+  <link rel="stylesheet" href="source/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Business Contact & Bank Info</h1>
+    </header>
+
+    <main>
+      <!-- Bank Accounts Section -->
+      <section class="card">
+        <h2>Bank Accounts</h2>
+        <div id="banks-list">
+          <!-- Bank 1 -->
+          <div class="bank-card" data-full-account="1057305720001">
+            <div class="bank-row">
+              <div>
+                <h4>BRAC Bank PLC</h4>
+                <div class="small">Branch: TANGAIL BRANCH</div>
+                <div class="small">Account Name: TANVIR HASAN</div>
+                <div class="small">Routing: 060932305 | SWIFT: BRAKBDDH</div>
+              </div>
+            </div>
+            <div class="bank-details">
+              <div class="account-number" id="acc1">XXXX-XXXX-0001</div>
+              <div class="button-group">
+                <button class="btn show-toggle" data-target="acc1">Show</button>
+                <button class="btn btn-copy" data-copy="1057305720001">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank 2 -->
+          <div class="bank-card" data-full-account="8888204571366001">
+            <div class="bank-row">
+              <div>
+                <h4>BRAC Bank PLC</h4>
+                <div class="small">Branch: AGENT BANKING SUB ONE</div>
+                <div class="small">Account Name: M/S BHAI BHAI TRADERS</div>
+                <div class="small">Routing: 060270609 | SWIFT: BRAKBDDH</div>
+              </div>
+            </div>
+            <div class="bank-details">
+              <div class="account-number" id="acc2">XXXX-XXXX-6001</div>
+              <div class="button-group">
+                <button class="btn show-toggle" data-target="acc2">Show</button>
+                <button class="btn btn-copy" data-copy="8888204571366001">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank 3 -->
+          <div class="bank-card" data-full-account="1503353045001">
+            <div class="bank-row">
+              <div>
+                <h4>CITY Bank PLC</h4>
+                <div class="small">Branch: GHATAIL BRANCH</div>
+                <div class="small">Account Name: M/S BHAI BHAI TRADERS</div>
+                <div class="small">Routing: ------------------- | SWIFT: CIBLBDDH</div>
+              </div>
+            </div>
+            <div class="bank-details">
+              <div class="account-number" id="acc3">XXXX-XXXX-5001</div>
+              <div class="button-group">
+                <button class="btn show-toggle" data-target="acc3">Show</button>
+                <button class="btn btn-copy" data-copy="1503353045001">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="card">
+        <h2>Contact</h2>
+        <div class="contact-item">
+          <div class="contact-label">Email:</div>
+          <div class="contact-info">
+            <a href="mailto:bhaibhaitraders2024@gmail.com" id="email-link">business@bhai.bhai.traders</a>
+            <button class="btn btn-copy" data-copy="bhaibhaitraders2024@gmail.com">Copy</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="source/script.js"></script>
+</body>
+</html>
