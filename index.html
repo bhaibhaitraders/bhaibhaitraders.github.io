@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Portal</title>
+
+  <link rel="icon" href="logo.png">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      color: #333;
+      padding: 40px 15px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      padding: 30px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 0.6s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 0.85rem;
+      color: #34495e;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin: 30px 0 12px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+
+    .info-card {
+      background: #fdfdfd;
+      border: 1px solid #f0f0f0;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 15px;
+      transition: 0.3s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+
+    .bank-header {
+      color: #3498db;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .bank-grid {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 8px 5px;
+      font-size: 0.9rem;
+      align-items: start;
+    }
+
+    .label {
+      color: #7f8c8d;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      padding-right: 10px;
+    }
+
+    .value {
+      color: #2c3e50;
+      font-weight: 600;
+      word-break: break-all;
+      line-height: 1.2;
+    }
+
+    .acc-highlight {
+      color: #3498db;
+      font-family: 'Consolas', monospace;
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 8px;
+      cursor: pointer;
+      border: none;
+      transition: 0.2s;
+    }
+
+    /* Updated call now button color to match copy buttons */
+    .btn-primary { background: #f1f2f6; color: #57606f; }
+    .btn-secondary { background: #f1f2f6; color: #57606f; }
+    .btn-toggle { background: #dcdde1; color: #2f3640; margin-top: 5px; }
+    .btn:active { transform: scale(0.98); }
+
+    .datetime {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #95a5a6;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container" id="mainContainer">
+    <h1>M/S Bhai Bhai Traders</h1>
+    <p class="subtitle">Official Business Portal</p>
+
+    <h2>Shop Contacts</h2>
+    <div id="contactList"></div>
+
+    <h2>BANK Information</h2>
+    <div id="bankList"></div>
+
+    <h2>CARD Information</h2>
+    <div id="cardList"></div>
+
+    <h2>General Info</h2>
+    <div id="generalList"></div>
+
+    <div class="datetime" id="datetime"></div>
+  </div>
+
+  <script>
+    const myContacts = [
+      { name: "MD. ABUL KALAM AZAD (LABU)", role: "Proprietor", phone: "+8801736780197" },
+      { name: "TANVIR HASAN (NIJHOM)", role: "Managing Director", phone: "+8801735404034" }
+    ];
+
+    const myBanks = [
+      { bank: "BRAC Bank PLC (1)", name: "M/S BHAI BHAI TRADERS", acc: "0000000000", branch: "PLACEHOLDER", routing: "", swift: "PLACEHOLDER" },
+      { bank: "BRAC Bank PLC (2)", name: "TANVIR HASAN", acc: "1057305720001", branch: "TANGAIL BRANCH", routing: "060932305", swift: "BRAKBDDH" },
+      { bank: "City Bank PLC", name: "M/S BHAI BHAI TRADERS", acc: "1503353045001", branch: "GHATAIL SUB BRANCH", routing: "", swift: "CIBLBDDH" }
+    ];
+
+    const myCards = [
+      { bank: "VISA (1)", card: "4777920800060917", type: "Debit", network: "Visa" },
+      { bank: "VISA (2)", card: "0000000000", type: "Debit", network: "Visa" },
+      { bank: "American Express", card: "371599122322771", type: "Debit", network: "American Express" }
+    ];
+
+    function formatAccount(acc) {
+      const first = acc.slice(0, 4);
+      const last = acc.slice(-4);
+      return `${first}-****-${last}`;
+    }
+
+    const generalInfo = [
+      { type: "Email", value: "info@bhaibhaitraders.com", action: "mailto:info@bhaibhaitraders.com", label: "Send Email" },
+      { type: "Address", value: "Raktipara Bus Stand, Madhupur, Tangail", action: "https://maps.app.goo.gl/XDMBKiriLQUUtSB86", label: "View on Google Maps" }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('mainContainer');
+      container.style.opacity = 1;
+      container.style.transform = "translateY(0)";
+
+      // Contacts
+      document.getElementById('contactList').innerHTML = myContacts.map(c => `
+        <div class="info-card">
+          <span class="bank-header">${c.name}</span>
+          <div style="color:#888; font-size:0.85rem; margin-top:-8px; margin-bottom:10px;">${c.role}</div>
+          <a href="tel:${c.phone}" class="btn btn-primary">📞 Call Now</a>
+        </div>
+      `).join('');
+
+      // Banks
+      document.getElementById('bankList').innerHTML = myBanks.map((b, index) => `
+        <div class="info-card">
+          <span class="bank-header">${b.bank}</span>
+          <div class="bank-grid">
+            <div class="label">A/C NAME <span>:</span></div><div class="value">${b.name}</div>
+            <div class="label">A/C NO <span>:</span></div>
+            <div class="value acc-highlight" id="acc-${index}">${formatAccount(b.acc)}</div>
+            <div class="label">BRANCH <span>:</span></div><div class="value">${b.branch}</div>
+          </div>
+          <button class="btn btn-toggle" id="toggle-acc-${index}" onclick="toggleAcc(${index}, '${b.acc}')">Show</button>
+          <button class="btn btn-secondary" onclick="copyAcc('${b.acc}')">Copy Account Number</button>
+        </div>
+      `).join('');
+
+      // Cards
+      document.getElementById('cardList').innerHTML = myCards.map((c, index) => `
+        <div class="info-card">
+          <span class="bank-header">${c.bank}</span>
+          <div class="bank-grid">
+            <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${formatAccount(c.card)}</div>
+            <div class="label">TYPE <span>:</span></div><div class="value">${c.type}</div>
+            <div class="label">NETWORK <span>:</span></div><div class="value">${c.network}</div>
+          </div>
+          <button class="btn btn-toggle" id="toggle-card-${index}" onclick="toggleCard(${index}, '${c.card}')">Show</button>
+          <button class="btn btn-secondary" onclick="copyAcc('${c.card}')">Copy Card Number</button>
+        </div>
+      `).join('');
+
+      // General Info
+      document.getElementById('generalList').innerHTML = generalInfo.map(g => `
+        <div class="info-card">
+          <span class="bank-header" style="color:#333; font-size:1rem;">${g.type}</span>
+          <div style="color:#666; font-size:0.85rem; margin-top:-5px; margin-bottom:10px;">${g.value}</div>
+          <a href="${g.action}" target="_blank" class="btn btn-secondary">${g.label}</a>
+        </div>
+      `).join('');
+
+      // Date & Time with copyright
+      const datetime = document.getElementById('datetime');
+      function updateTime() {
+        const now = new Date();
+        const formatted = now.toLocaleString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+        const year = now.getFullYear();
+        datetime.innerHTML = `${formatted}<br>© ${year} M/S Bhai Bhai Traders. All rights reserved.`;
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
+    });
+
+    function copyAcc(text) {
+      navigator.clipboard.writeText(text).then(() => showToast("Copied!"));
+    }
+
+    function showToast(message) {
+      const toast = document.createElement("div");
+      toast.textContent = message;
+      toast.style.position = "fixed";
+      toast.style.bottom = "20px";
+      toast.style.left = "50%";
+      toast.style.transform = "translateX(-50%)";
+      toast.style.background = "#2c3e50";
+      toast.style.color = "#fff";
+      toast.style.padding = "10px 20px";
+      toast.style.borderRadius = "6px";
+      toast.style.fontSize = "0.85rem";
+      toast.style.boxShadow = "0 5px 15px rgba(0,0,0,0.2)";
+      toast.style.zIndex = "9999";
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    }
+
+    const accVisible = {};
+    function toggleAcc(index, fullAcc) {
+      const elem = document.getElementById(`acc-${index}`);
+      const btn = document.getElementById(`toggle-acc-${index}`);
+      if (accVisible[index]) {
+        elem.textContent = formatAccount(fullAcc);
+        btn.textContent = "Show";
+        accVisible[index] = false;
+      } else {
+        elem.textContent = fullAcc;
+        btn.textContent = "Hide";
+        accVisible[index] = true;
+      }
+    }
+
+    const cardVisible = {};
+    function toggleCard(index, fullCard) {
+      const elem = document.getElementById(`card-${index}`);
+      const btn = document.getElementById(`toggle-card-${index}`);
+      if (cardVisible[index]) {
+        elem.textContent = formatAccount(fullCard);
+        btn.textContent = "Show";
+        cardVisible[index] = false;
+      } else {
+        elem.textContent = fullCard;
+        btn.textContent = "Hide";
+        cardVisible[index] = true;
+      }
+    }
+  </script>
+
+</body>
+</html>
