@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +29,7 @@
     .container {
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       max-width: 500px;
       width: 100%;
       padding: 30px;
@@ -72,7 +73,7 @@
 
     .info-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
     }
 
     .bank-header {
@@ -85,7 +86,7 @@
 
     .bank-grid {
       display: grid;
-      grid-template-columns: 100px 1fr;
+      grid-template-columns: 115px 1fr;
       gap: 8px 5px;
       font-size: 0.9rem;
       align-items: start;
@@ -98,7 +99,9 @@
       text-transform: uppercase;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding-right: 10px;
+      white-space: nowrap;
     }
 
     .value {
@@ -131,10 +134,25 @@
     }
 
     /* Updated call now button color to match copy buttons */
-    .btn-primary { background: #f1f2f6; color: #57606f; }
-    .btn-secondary { background: #f1f2f6; color: #57606f; }
-    .btn-toggle { background: #dcdde1; color: #2f3640; margin-top: 5px; }
-    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: #f1f2f6;
+      color: #57606f;
+    }
+
+    .btn-secondary {
+      background: #f1f2f6;
+      color: #57606f;
+    }
+
+    .btn-toggle {
+      background: #dcdde1;
+      color: #2f3640;
+      margin-top: 5px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
 
     .datetime {
       margin-top: 30px;
@@ -318,4 +336,5 @@
   </script>
 
 </body>
+
 </html>
