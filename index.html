@@ -493,18 +493,41 @@
     const datetime = document.getElementById('datetime');
     function updateTime() {
       const now = new Date();
-      // Adjust locale based on language
-      const locale = currentLang === 'bn' ? 'bn-BD' : 'en-US';
-      const formatted = now.toLocaleString(locale, {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      });
       const year = now.getFullYear();
 
-      // Convert year to bengali numbers if needed
-      const displayYear = currentLang === 'bn' ? new Intl.NumberFormat('bn-BD', { useGrouping: false }).format(year) : year;
+      if (currentLang === 'bn') {
+        const dateStr = now.toLocaleDateString('bn-BD', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
 
-      datetime.innerHTML = `${formatted}<br>© ${displayYear} ${translations[currentLang].rights}`;
+        const h = now.getHours();
+        let period = "রাত";
+        if (h >= 4 && h < 6) period = "ভোর";
+        else if (h >= 6 && h < 12) period = "সকাল";
+        else if (h >= 12 && h < 16) period = "দুপুর";
+        else if (h >= 16 && h < 18) period = "বিকাল";
+        else if (h >= 18 && h < 20) period = "সন্ধ্যা";
+        else period = "রাত";
+
+        const h12 = h % 12 || 12;
+        const m = now.getMinutes().toString().padStart(2, '0');
+        const s = now.getSeconds().toString().padStart(2, '0');
+
+        // Convert english digits to bengali format
+        const enToBn = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+        const toBn = numStr => String(numStr).split('').map(char => enToBn[char] || char).join('');
+
+        const timeStr = `${toBn(h12)}:${toBn(m)}:${toBn(s)}`;
+        const displayYear = toBn(year);
+
+        datetime.innerHTML = `${dateStr} - ${period} ${timeStr}<br>© ${displayYear} ${translations[currentLang].rights}`;
+      } else {
+        const formatted = now.toLocaleString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+        datetime.innerHTML = `${formatted}<br>© ${year} ${translations[currentLang].rights}`;
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
