@@ -25,6 +25,7 @@
 
     body.bn-font * {
       font-family: 'SutonnyOMJ', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.5;
     }
 
     body {
@@ -436,7 +437,7 @@
       document.getElementById('contactList').innerHTML = myContacts.map(c => `
         <div class="info-card">
           <span class="bank-header">${c[currentLang].name}</span>
-          <div style="color:#888; font-size:0.85rem; margin-top:-8px; margin-bottom:10px;">${c[currentLang].role}</div>
+          <div style="color:#888; font-size:0.85rem; margin-top:${currentLang === 'bn' ? '0' : '-8px'}; margin-bottom:10px;">${c[currentLang].role}</div>
           <a href="tel:${c.phone}" class="btn btn-primary">${t.callNow}</a>
         </div>
       `).join('');
@@ -496,9 +497,10 @@
       const year = now.getFullYear();
 
       if (currentLang === 'bn') {
-        const dateStr = now.toLocaleDateString('bn-BD', {
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
+        const weekday = now.toLocaleDateString('bn-BD', { weekday: 'long' });
+        const day = now.toLocaleDateString('bn-BD', { day: 'numeric' });
+        const month = now.toLocaleDateString('bn-BD', { month: 'long' });
+        const yearBn = now.toLocaleDateString('bn-BD', { year: 'numeric' });
 
         const h = now.getHours();
         let period = "রাত";
@@ -518,15 +520,22 @@
         const toBn = numStr => String(numStr).split('').map(char => enToBn[char] || char).join('');
 
         const timeStr = `${toBn(h12)}:${toBn(m)}:${toBn(s)}`;
-        const displayYear = toBn(year);
 
-        datetime.innerHTML = `${dateStr} - ${period} ${timeStr}<br>© ${displayYear} ${translations[currentLang].rights}`;
+        datetime.innerHTML = `${weekday} - ${day} ${month} ${yearBn} - ${period} ${timeStr}<br>© ${yearBn} ${translations[currentLang].rights}`;
       } else {
-        const formatted = now.toLocaleString('en-US', {
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-          hour: '2-digit', minute: '2-digit', second: '2-digit'
-        });
-        datetime.innerHTML = `${formatted}<br>© ${year} ${translations[currentLang].rights}`;
+        const weekday = now.toLocaleDateString('en-US', { weekday: 'long' });
+        const day = now.toLocaleDateString('en-US', { day: 'numeric' });
+        const month = now.toLocaleDateString('en-US', { month: 'long' });
+        const yearEn = now.getFullYear();
+
+        const h = now.getHours();
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 || 12;
+        const m = now.getMinutes().toString().padStart(2, '0');
+        const s = now.getSeconds().toString().padStart(2, '0');
+        const timeStr = `${h12}:${m}:${s} ${ampm}`;
+
+        datetime.innerHTML = `${weekday} - ${day} ${month} ${yearEn} - ${timeStr}<br>© ${yearEn} ${translations[currentLang].rights}`;
       }
     }
 
