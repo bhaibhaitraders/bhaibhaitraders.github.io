@@ -9,11 +9,22 @@
   <link rel="icon" href="logo.png">
 
   <style>
+    @font-face {
+      font-family: 'SutonnyOMJ';
+      src: url('font/SutonnyOMJ.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body.bn-font * {
+      font-family: 'SutonnyOMJ', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
@@ -393,6 +404,12 @@
 
     function setLang(lang) {
       currentLang = lang;
+
+      if (lang === 'bn') {
+        document.body.classList.add('bn-font');
+      } else {
+        document.body.classList.remove('bn-font');
+      }
 
       // Update static text
       document.querySelectorAll("[data-key]").forEach(elem => {
