@@ -24,6 +24,61 @@
       background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
       color: #333;
       padding: 40px 15px;
+      overflow-x: hidden;
+    }
+
+    #langOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      transition: opacity 0.5s ease;
+    }
+
+    .lang-card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .lang-card h2 {
+      border: none;
+      margin: 0 0 25px;
+      font-size: 1.2rem;
+      letter-spacing: 0.5px;
+    }
+
+    .lang-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid #3498db;
+      background: #fff;
+      color: #3498db;
+      transition: all 0.3s ease;
+    }
+
+    .lang-btn:hover {
+      background: #3498db;
+      color: #fff;
+      transform: translateY(-2px);
     }
 
     .container {
@@ -34,8 +89,15 @@
       width: 100%;
       padding: 30px;
       opacity: 0;
+      visibility: hidden;
       transform: translateY(20px);
       transition: opacity 1s ease, transform 0.6s ease;
+    }
+
+    .container.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
 
     h1 {
@@ -219,30 +281,83 @@
 </head>
 
 <body>
+  <!-- Language Selection Overlay -->
+  <div id="langOverlay">
+    <div class="lang-card">
+      <h2>Select Your Language<br><span
+          style="font-size: 1rem; color: #7f8c8d; font-weight: normal; margin-top: 5px; display: block;">ভাষা নির্বাচন
+          করুন</span></h2>
+      <button class="lang-btn" onclick="setLang('en')">English</button>
+      <button class="lang-btn" onclick="setLang('bn')">বাংলা (Bengali)</button>
+    </div>
+  </div>
 
   <div class="container" id="mainContainer">
-    <h1>M/S Bhai Bhai Traders</h1>
-    <p class="subtitle">Official Business Portal</p>
+    <h1 data-key="title">M/S Bhai Bhai Traders</h1>
+    <p class="subtitle" data-key="subtitle">Official Business Portal</p>
 
-    <h2>Shop Contacts</h2>
+    <h2 data-key="shopContact">Shop Contacts</h2>
     <div id="contactList"></div>
 
-    <h2>BANK Information</h2>
+    <h2 data-key="bankInfo">BANK Information</h2>
     <div id="bankList"></div>
 
-    <h2>CARD Information</h2>
+    <h2 data-key="cardInfo">CARD Information</h2>
     <div id="cardList"></div>
 
-    <h2>General Info</h2>
+    <h2 data-key="generalInfo">General Info</h2>
     <div id="generalList"></div>
 
     <div class="datetime" id="datetime"></div>
   </div>
 
   <script>
+    const translations = {
+      en: {
+        title: "M/S Bhai Bhai Traders",
+        subtitle: "Official Business Portal",
+        shopContact: "Shop Contacts",
+        bankInfo: "BANK Information",
+        cardInfo: "CARD Information",
+        generalInfo: "General Info",
+        callNow: "📞 Call Now",
+        copyAcc: "Copy Account Number",
+        copyCard: "Copy Card Number",
+        show: "Show",
+        hide: "Hide",
+        copied: "Copied!",
+        rights: "M/S Bhai Bhai Traders. All rights reserved."
+      },
+      bn: {
+        title: "মেসার্স ভাই ভাই ট্রেডার্স",
+        subtitle: "অফিসিয়াল বিজনেস পোর্টাল",
+        shopContact: "যোগাযোগের ঠিকানা",
+        bankInfo: "ব্যাংকের তথ্য",
+        cardInfo: "কার্ডের তথ্য",
+        generalInfo: "অন্যান্য তথ্য",
+        callNow: "📞 কল করুন",
+        copyAcc: "অ্যাকাউন্ট নম্বর কপি করুন",
+        copyCard: "কার্ড নম্বর কপি করুন",
+        show: "দেখুন",
+        hide: "লুকান",
+        copied: "কপি করা হয়েছে!",
+        rights: "মেসার্স ভাই ভাই ট্রেডার্স - সর্বস্বত্ব সংরক্ষিত।"
+      }
+    };
+
+    let currentLang = 'en';
+
     const myContacts = [
-      { name: "MD. ABUL KALAM AZAD (LABU)", role: "Proprietor", phone: "+8801736780197" },
-      { name: "TANVIR HASAN (NIJHOM)", role: "Managing Director", phone: "+8801735404034" }
+      {
+        en: { name: "MD. ABUL KALAM AZAD (LABU)", role: "Proprietor" },
+        bn: { name: "প্রোঃ মোঃ আবুল কালাম আজাদ (লেবু)", role: "স্বত্বাধিকারী" },
+        phone: "+8801736780197"
+      },
+      {
+        en: { name: "TANVIR HASAN (NIJHOM)", role: "Managing Director" },
+        bn: { name: "তানভীর হাসান (নিঝুম)", role: "ব্যবস্থাপনা পরিচালক" },
+        phone: "+8801735404034"
+      }
     ];
 
     const myBanks = [
@@ -264,79 +379,128 @@
     }
 
     const generalInfo = [
-      { type: "Email", value: "info@bhaibhaitraders.com", action: "mailto:info@bhaibhaitraders.com", label: "Send Email" },
-      { type: "Address", value: "Raktipara Bus Stand, Madhupur, Tangail", action: "https://maps.app.goo.gl/XDMBKiriLQUUtSB86", label: "View on Google Maps" }
+      {
+        en: { type: "Email", value: "info@bhaibhaitraders.com", label: "Send Email" },
+        bn: { type: "ইমেইল", value: "info@bhaibhaitraders.com", label: "ইমেইল পাঠান" },
+        action: "mailto:info@bhaibhaitraders.com"
+      },
+      {
+        en: { type: "Address", value: "Raktipara Bus Stand, Madhupur, Tangail", label: "View on Google Maps" },
+        bn: { type: "ঠিকানা", value: "রক্তিপাড়া বাসস্ট্যান্ড, মধুপুর, টাঙ্গাইল", label: "গুগল ম্যাপে দেখুন" },
+        action: "https://maps.app.goo.gl/XDMBKiriLQUUtSB86"
+      }
     ];
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('mainContainer');
-      container.style.opacity = 1;
-      container.style.transform = "translateY(0)";
+    function setLang(lang) {
+      currentLang = lang;
+
+      // Update static text
+      document.querySelectorAll("[data-key]").forEach(elem => {
+        const key = elem.getAttribute("data-key");
+        if (translations[lang][key]) {
+          elem.textContent = translations[lang][key];
+        }
+      });
+
+      renderContent();
+
+      // Hide overlay and show main container
+      const overlay = document.getElementById('langOverlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        document.getElementById('mainContainer').classList.add('show');
+      }, 500);
+    }
+
+    function renderContent() {
+      const t = translations[currentLang];
 
       // Contacts
       document.getElementById('contactList').innerHTML = myContacts.map(c => `
         <div class="info-card">
-          <span class="bank-header">${c.name}</span>
-          <div style="color:#888; font-size:0.85rem; margin-top:-8px; margin-bottom:10px;">${c.role}</div>
-          <a href="tel:${c.phone}" class="btn btn-primary">📞 Call Now</a>
+          <span class="bank-header">${c[currentLang].name}</span>
+          <div style="color:#888; font-size:0.85rem; margin-top:-8px; margin-bottom:10px;">${c[currentLang].role}</div>
+          <a href="tel:${c.phone}" class="btn btn-primary">${t.callNow}</a>
         </div>
       `).join('');
 
-      // Banks
-      document.getElementById('bankList').innerHTML = myBanks.map((b, index) => `
+      // Banks (Data stays intact, just buttons translate)
+      document.getElementById('bankList').innerHTML = myBanks.map((b, index) => {
+        const isVisible = accVisible[index];
+        const btnText = isVisible ? t.hide : t.show;
+        const displayAcc = isVisible ? b.acc : formatAccount(b.acc);
+        return `
         <div class="info-card">
           <span class="bank-header">${b.bank}</span>
           <div class="bank-grid">
             <div class="label">A/C NAME <span>:</span></div><div class="value">${b.name}</div>
             <div class="label">A/C NO <span>:</span></div>
-            <div class="value acc-highlight" id="acc-${index}">${formatAccount(b.acc)}</div>
+            <div class="value acc-highlight" id="acc-${index}">${displayAcc}</div>
             <div class="label">BRANCH <span>:</span></div><div class="value">${b.branch}</div>
           </div>
-          <button class="btn btn-toggle" id="toggle-acc-${index}" onclick="toggleAcc(${index}, '${b.acc}')">Show</button>
-          <button class="btn btn-secondary" onclick="copyAcc('${b.acc}')">Copy Account Number</button>
+          <button class="btn btn-toggle" id="toggle-acc-${index}" onclick="toggleAcc(${index}, '${b.acc}')">${btnText}</button>
+          <button class="btn btn-secondary" onclick="copyAcc('${b.acc}')">${t.copyAcc}</button>
         </div>
-      `).join('');
+      `}).join('');
 
-      // Cards
-      document.getElementById('cardList').innerHTML = myCards.map((c, index) => `
+      // Cards (Data stays intact, just buttons translate)
+      document.getElementById('cardList').innerHTML = myCards.map((c, index) => {
+        const isVisible = cardVisible[index];
+        const btnText = isVisible ? t.hide : t.show;
+        const displayCard = isVisible ? c.card : formatAccount(c.card);
+        return `
         <div class="info-card">
           <span class="bank-header">${c.bank}</span>
           <div class="bank-grid">
-            <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${formatAccount(c.card)}</div>
+            <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${displayCard}</div>
             <div class="label">TYPE <span>:</span></div><div class="value">${c.type}</div>
             <div class="label">NETWORK <span>:</span></div><div class="value">${c.network}</div>
           </div>
-          <button class="btn btn-toggle" id="toggle-card-${index}" onclick="toggleCard(${index}, '${c.card}')">Show</button>
-          <button class="btn btn-secondary" onclick="copyAcc('${c.card}')">Copy Card Number</button>
+          <button class="btn btn-toggle" id="toggle-card-${index}" onclick="toggleCard(${index}, '${c.card}')">${btnText}</button>
+          <button class="btn btn-secondary" onclick="copyAcc('${c.card}')">${t.copyCard}</button>
         </div>
-      `).join('');
+      `}).join('');
 
       // General Info
       document.getElementById('generalList').innerHTML = generalInfo.map(g => `
         <div class="info-card">
-          <span class="bank-header" style="color:#333; font-size:1rem;">${g.type}</span>
-          <div style="color:#666; font-size:0.85rem; margin-top:-5px; margin-bottom:10px;">${g.value}</div>
-          <a href="${g.action}" target="_blank" class="btn btn-secondary">${g.label}</a>
+          <span class="bank-header" style="color:#333; font-size:1rem;">${g[currentLang].type}</span>
+          <div style="color:#666; font-size:0.85rem; margin-top:-5px; margin-bottom:10px;">${g[currentLang].value}</div>
+          <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
         </div>
       `).join('');
 
-      // Date & Time with copyright
-      const datetime = document.getElementById('datetime');
-      function updateTime() {
-        const now = new Date();
-        const formatted = now.toLocaleString('en-US', {
-          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-          hour: '2-digit', minute: '2-digit', second: '2-digit'
-        });
-        const year = now.getFullYear();
-        datetime.innerHTML = `${formatted}<br>© ${year} M/S Bhai Bhai Traders. All rights reserved.`;
-      }
-      setInterval(updateTime, 1000);
       updateTime();
+    }
+
+    const datetime = document.getElementById('datetime');
+    function updateTime() {
+      const now = new Date();
+      // Adjust locale based on language
+      const locale = currentLang === 'bn' ? 'bn-BD' : 'en-US';
+      const formatted = now.toLocaleString(locale, {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+      const year = now.getFullYear();
+
+      // Convert year to bengali numbers if needed
+      const displayYear = currentLang === 'bn' ? new Intl.NumberFormat('bn-BD', { useGrouping: false }).format(year) : year;
+
+      datetime.innerHTML = `${formatted}<br>© ${displayYear} ${translations[currentLang].rights}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Setup time updater
+      setInterval(updateTime, 1000);
+
+      // If no language chosen yet, wait for user
+      // Elements are hidden by default via CSS container not having "show" class
     });
 
     function copyAcc(text) {
-      navigator.clipboard.writeText(text).then(() => showToast("Copied!"));
+      navigator.clipboard.writeText(text).then(() => showToast(translations[currentLang].copied));
     }
 
     function showToast(message) {
@@ -361,13 +525,14 @@
     function toggleAcc(index, fullAcc) {
       const elem = document.getElementById(`acc-${index}`);
       const btn = document.getElementById(`toggle-acc-${index}`);
+      const t = translations[currentLang];
       if (accVisible[index]) {
         elem.textContent = formatAccount(fullAcc);
-        btn.textContent = "Show";
+        btn.textContent = t.show;
         accVisible[index] = false;
       } else {
         elem.textContent = fullAcc;
-        btn.textContent = "Hide";
+        btn.textContent = t.hide;
         accVisible[index] = true;
       }
     }
@@ -376,13 +541,14 @@
     function toggleCard(index, fullCard) {
       const elem = document.getElementById(`card-${index}`);
       const btn = document.getElementById(`toggle-card-${index}`);
+      const t = translations[currentLang];
       if (cardVisible[index]) {
         elem.textContent = formatAccount(fullCard);
-        btn.textContent = "Show";
+        btn.textContent = t.show;
         cardVisible[index] = false;
       } else {
         elem.textContent = fullCard;
-        btn.textContent = "Hide";
+        btn.textContent = t.hide;
         cardVisible[index] = true;
       }
     }
