@@ -78,6 +78,26 @@
       transition: opacity 0.5s ease;
     }
 
+    .lang-logo {
+      width: 220px;
+      height: auto;
+      object-fit: contain;
+      margin-bottom: 20px;
+      animation: logoFadeIn 1s ease;
+    }
+
+    @keyframes logoFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
     .lang-card {
       background: #fff;
       padding: 40px;
@@ -86,6 +106,9 @@
       text-align: center;
       max-width: 400px;
       width: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .lang-card h2 {
@@ -348,6 +371,7 @@
   <!-- Language Selection Overlay -->
   <div id="langOverlay">
     <div class="lang-card">
+      <img src="bin/logo.png" alt="Bhai Bhai Traders Logo" class="lang-logo">
       <h2>Select Your Language</h2>
       <button class="lang-btn" onclick="setLang('en')">English</button>
       <button class="lang-btn" onclick="setLang('bn')">Bengali</button>
