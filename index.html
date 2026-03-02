@@ -529,20 +529,19 @@
 
     #clearFocusBtn {
       display: none;
-      position: fixed;
-      top: 20px;
-      left: 20px;
+      position: absolute;
+      top: -15px;
+      right: -15px;
       z-index: 10001;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
-      background: white;
-      color: #333;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      background: #2c3e50;
+      color: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       cursor: pointer;
-      border: 1px solid #eee;
+      border: 2px solid white;
       display: flex;
-      /* overridden by inline style if none */
       align-items: center;
       justify-content: center;
       transition: all 0.3s ease;
@@ -734,10 +733,13 @@
         document.getElementById('mainContainer').classList.add('show');
 
         if (highlightedItemId) {
-          if (clearBtn) clearBtn.style.display = 'flex';
-
           const target = document.getElementById('item-' + highlightedItemId);
           if (target) {
+            const clearBtn = document.getElementById('clearFocusBtn');
+            if (clearBtn) {
+              target.appendChild(clearBtn);
+              clearBtn.style.display = 'flex';
+            }
             target.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         }
@@ -934,7 +936,10 @@
       highlightedItemId = null;
       document.body.classList.remove('blur-active');
       const clearBtn = document.getElementById('clearFocusBtn');
-      if (clearBtn) clearBtn.style.display = 'none';
+      if (clearBtn) {
+        clearBtn.style.display = 'none';
+        document.body.appendChild(clearBtn); // Move back to body to keep it available
+      }
 
       document.querySelectorAll('.highlighted-item').forEach(el => {
         el.classList.remove('highlighted-item');
