@@ -734,14 +734,21 @@
       // General Info
       document.getElementById('generalList').innerHTML = generalInfo.map(g => `
         <div class="info-card">
-          <div class="card-header">
-            <span class="bank-header">
-              <img src="${g.img}" alt="${g[currentLang].type}" class="card-icon">
-              ${g[currentLang].type}
-            </span>
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div class="card-header" style="margin-bottom: 0; flex: 1;">
+              <span class="bank-header">
+                <img src="${g.img}" alt="${g[currentLang].type}" class="card-icon">
+                ${g[currentLang].type}
+              </span>
+            </div>
+            <div class="chevron" style="margin-left: 10px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
           </div>
-          <div style="color:#666; font-size:0.85rem; margin-top:-5px; margin-bottom:10px;">${g[currentLang].value}</div>
-          <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
+          <div class="accordion-content">
+            <div style="color:#666; font-size:0.85rem; margin-top:-5px; margin-bottom:10px;">${g[currentLang].value}</div>
+            <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
+          </div>
         </div>
       `).join('');
 
@@ -864,7 +871,7 @@
       const isOpen = content.classList.contains('open');
 
       // Close all other accordions in the same list
-      const list = header.closest('#bankList, #cardList');
+      const list = header.closest('#bankList, #cardList, #generalList');
       if (list) {
         list.querySelectorAll('.accordion-content.open').forEach(openContent => {
           if (openContent !== content) {
