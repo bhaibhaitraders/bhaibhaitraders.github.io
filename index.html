@@ -201,12 +201,41 @@
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
     }
 
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
     .bank-header {
       color: #3498db;
       font-weight: bold;
       font-size: 1.1rem;
-      margin-bottom: 12px;
-      display: block;
+      margin-bottom: 0;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #7f8c8d;
+      padding: 5px;
+      border-radius: 4px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .copy-btn:hover {
+      background: #f1f2f6;
+      color: #3498db;
+    }
+
+    .copy-btn svg {
+      width: 18px;
+      height: 18px;
     }
 
     .bank-grid {
@@ -412,6 +441,7 @@
         show: "Show number",
         hide: "Hide number",
         copied: "Copied!",
+        share: "Copy Details",
         rights: "M/S Bhai Bhai Traders. All rights reserved."
       },
       bn: {
@@ -427,6 +457,7 @@
         show: "নম্বর দেখুন",
         hide: "নম্বর গোপন করুন",
         copied: "কপি করা হয়েছে!",
+        share: "তথ্য কপি করুন",
         rights: "মেসার্স ভাই ভাই ট্রেডার্স - সর্বস্বত্ব সংরক্ষিত।"
       }
     };
@@ -477,6 +508,9 @@
       }
     ];
 
+    const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+    const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
     function setLang(lang) {
       currentLang = lang;
 
@@ -524,7 +558,12 @@
         const displayAcc = isVisible ? b.acc : formatAccount(b.acc);
         return `
         <div class="info-card">
-          <span class="bank-header">${b.bank}</span>
+          <div class="card-header">
+            <span class="bank-header">${b.bank}</span>
+            <button class="copy-btn" onclick="shareBank(${index}, this)" title="${t.share}">
+              ${copyIcon}
+            </button>
+          </div>
           <div class="bank-grid">
             <div class="label">A/C NAME <span>:</span></div><div class="value">${b.name}</div>
             <div class="label">A/C NO <span>:</span></div>
@@ -543,7 +582,12 @@
         const displayCard = isVisible ? c.card : formatAccount(c.card);
         return `
         <div class="info-card">
-          <span class="bank-header">${c.bank}</span>
+          <div class="card-header">
+            <span class="bank-header">${c.bank}</span>
+            <button class="copy-btn" onclick="shareCard(${index}, this)" title="${t.share}">
+              ${copyIcon}
+            </button>
+          </div>
           <div class="bank-grid">
             <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${displayCard}</div>
             <div class="label">TYPE <span>:</span></div><div class="value">${c.type}</div>
@@ -673,6 +717,36 @@
         elem.textContent = fullCard;
         btn.textContent = t.hide;
         cardVisible[index] = true;
+      }
+    }
+
+    function shareBank(index, btn) {
+      const b = myBanks[index];
+      const text = `${b.bank}\nA/C NAME : ${b.name}\nA/C NO : ${b.acc}\nBRANCH : ${b.branch}`;
+      copyAcc(text);
+      if (btn) {
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML = checkIcon;
+        btn.style.color = "#2ecc71";
+        setTimeout(() => {
+          btn.innerHTML = originalIcon;
+          btn.style.color = "";
+        }, 2000);
+      }
+    }
+
+    function shareCard(index, btn) {
+      const c = myCards[index];
+      const text = `${c.bank}\nCARD NO : ${c.card}\nTYPE : ${c.type}\nNETWORK : ${c.network}`;
+      copyAcc(text);
+      if (btn) {
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML = checkIcon;
+        btn.style.color = "#2ecc71";
+        setTimeout(() => {
+          btn.innerHTML = originalIcon;
+          btn.style.color = "";
+        }, 2000);
       }
     }
   </script>
