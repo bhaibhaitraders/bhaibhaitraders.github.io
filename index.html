@@ -495,6 +495,24 @@
       return `${first}-****-${last}`;
     }
 
+    function displayHyphens(text) {
+      if (!text || text.length <= 8) return text;
+
+      const len = text.length;
+      const first = text.slice(0, 4);
+      const last = text.slice(-4);
+      const mid = text.slice(4, -4);
+
+      if (len === 13) {
+        // 13-digit special case: 4-5-4
+        return `${first}-${mid}-${last}`;
+      }
+
+      // General case: group mid in blocks of up to 4
+      const midGrouped = mid.match(/.{1,4}/g).join('-');
+      return `${first}-${midGrouped}-${last}`;
+    }
+
     const generalInfo = [
       {
         en: { type: "Email", value: "info@bhaibhaitraders.com", label: "Send Email" },
@@ -567,7 +585,7 @@
           <div class="bank-grid">
             <div class="label">A/C NAME <span>:</span></div><div class="value">${b.name}</div>
             <div class="label">A/C NO <span>:</span></div>
-            <div class="value acc-highlight" id="acc-${index}">${displayAcc}</div>
+            <div class="value acc-highlight" id="acc-${index}">${isVisible ? displayHyphens(b.acc) : displayAcc}</div>
             <div class="label">BRANCH <span>:</span></div><div class="value">${b.branch}</div>
           </div>
           <button class="btn btn-toggle" id="toggle-acc-${index}" onclick="toggleAcc(${index}, '${b.acc}')">${btnText}</button>
@@ -589,7 +607,7 @@
             </button>
           </div>
           <div class="bank-grid">
-            <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${displayCard}</div>
+            <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${isVisible ? displayHyphens(c.card) : displayCard}</div>
             <div class="label">TYPE <span>:</span></div><div class="value">${c.type}</div>
             <div class="label">NETWORK <span>:</span></div><div class="value">${c.network}</div>
           </div>
@@ -698,7 +716,7 @@
         btn.textContent = t.show;
         accVisible[index] = false;
       } else {
-        elem.textContent = fullAcc;
+        elem.textContent = displayHyphens(fullAcc);
         btn.textContent = t.hide;
         accVisible[index] = true;
       }
@@ -714,7 +732,7 @@
         btn.textContent = t.show;
         cardVisible[index] = false;
       } else {
-        elem.textContent = fullCard;
+        elem.textContent = displayHyphens(fullCard);
         btn.textContent = t.hide;
         cardVisible[index] = true;
       }
