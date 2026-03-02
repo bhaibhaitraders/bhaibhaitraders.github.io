@@ -1018,10 +1018,16 @@
     }
 
     function toggleAccordion(header) {
+      const infoCard = header.closest('.info-card');
+
+      // If we are in focus mode and this is the highlighted item, don't allow toggling
+      if (document.body.classList.contains('blur-active') && infoCard.classList.contains('highlighted-item')) {
+        return;
+      }
+
       const content = header.nextElementSibling;
       const chevron = header.querySelector('.chevron');
       const isOpen = content.classList.contains('open');
-      const infoCard = header.closest('.info-card');
 
       // Close all other accordions in the same list
       const list = header.closest('#bankList, #cardList, #generalList');
