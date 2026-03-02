@@ -917,6 +917,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       highlightedItemId = urlParams.get('item');
+      const langParam = urlParams.get('lang');
+
       if (highlightedItemId) {
         // Delay adding the blur-active class slightly so that `scrollIntoView` 
         // works correctly, as overflow: hidden on body can block scrolling on some browsers
@@ -928,6 +930,11 @@
       // Setup time updater
       setInterval(updateTime, 1000);
 
+      // If a language is encoded in the URL (from a shared Focus Mode link),
+      // skip the language selection overlay and load directly in that language.
+      if (highlightedItemId && langParam && translations[langParam]) {
+        setLang(langParam);
+      }
       // If no language chosen yet, wait for user
       // Elements are hidden by default via CSS container not having "show" class
     });
@@ -954,6 +961,7 @@
       const itemId = `${type}-${index}`;
       const url = new URL(window.location.href);
       url.searchParams.set('item', itemId);
+      url.searchParams.set('lang', currentLang);
 
       navigator.clipboard.writeText(url.toString()).then(() => showToast(translations[currentLang].copied));
 
