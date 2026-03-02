@@ -489,6 +489,50 @@
         max-width: 600px;
       }
     }
+
+    /* Focus Mode for Shared Links */
+    body.blur-active .container>h1,
+    body.blur-active .container>.subtitle,
+    body.blur-active .container>h2,
+    body.blur-active .container>.datetime,
+    body.blur-active .info-card:not(.highlighted-item) {
+      filter: blur(5px);
+      opacity: 0.4;
+      pointer-events: none;
+      transition: all 0.4s ease;
+    }
+
+    .info-card.highlighted-item {
+      transform: scale(1.02);
+      box-shadow: 0 15px 35px rgba(52, 152, 219, 0.2);
+      border-color: #3498db;
+      z-index: 10;
+      position: relative;
+    }
+
+    #clearFocusBtn {
+      display: none;
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10001;
+      padding: 12px 25px;
+      border-radius: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      background: #3498db;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    #clearFocusBtn:hover {
+      background: #2980b9;
+      transform: translateX(-50%) translateY(-2px);
+    }
   </style>
 </head>
 
@@ -502,6 +546,8 @@
       <button class="lang-btn bn-text" onclick="setLang('bn')">বাংলা</button>
     </div>
   </div>
+
+  <button id="clearFocusBtn" onclick="clearFocus()"></button>
 
   <div class="container" id="mainContainer">
     <h1 data-key="title">M/S Bhai Bhai Traders</h1>
@@ -538,6 +584,8 @@
         hide: "Hide number",
         copied: "Copied!",
         share: "Copy Details",
+        shareLink: "Copy Link",
+        viewAll: "View All Information",
         rights: "M/S Bhai Bhai Traders. All rights reserved."
       },
       bn: {
@@ -554,6 +602,8 @@
         hide: "নম্বর গোপন করুন",
         copied: "কপি করা হয়েছে!",
         share: "তথ্য কপি করুন",
+        shareLink: "লিঙ্ক কপি করুন",
+        viewAll: "সব তথ্য দেখুন",
         rights: "মেসার্স ভাই ভাই ট্রেডার্স - সর্বস্বত্ব সংরক্ষিত।"
       }
     };
@@ -628,6 +678,9 @@
 
     const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
     const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const shareLinkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>`;
+
+    let highlightedItemId = null;
 
     function setLang(lang) {
       currentLang = lang;
@@ -646,6 +699,9 @@
         }
       });
 
+      const clearBtn = document.getElementById('clearFocusBtn');
+      if (clearBtn) clearBtn.textContent = translations[lang].viewAll;
+
       renderContent();
 
       // Hide overlay and show main container
@@ -654,6 +710,15 @@
       setTimeout(() => {
         overlay.style.display = 'none';
         document.getElementById('mainContainer').classList.add('show');
+
+        if (highlightedItemId) {
+          if (clearBtn) clearBtn.style.display = 'block';
+
+          const target = document.getElementById('item-' + highlightedItemId);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
       }, 500);
     }
 
@@ -679,23 +744,29 @@
         const isVisible = accVisible[index];
         const btnText = isVisible ? t.hide : t.show;
         const displayAcc = isVisible ? b.acc : formatAccount(b.acc);
+        const isHighlighted = highlightedItemId === 'bank-' + index;
         return `
-        <div class="info-card">
+        <div class="info-card ${isHighlighted ? 'highlighted-item is-open' : ''}" id="item-bank-${index}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="card-header" style="margin-bottom: 0; flex: 1;">
               <span class="bank-header">
                 <img src="${b.img}" alt="${b.bank}" class="card-icon">
                 ${b.bank}
               </span>
-              <button class="copy-btn" onclick="event.stopPropagation(); shareBank(${index}, this)" title="${t.share}">
-                ${copyIcon}
-              </button>
+              <div style="display: flex; gap: 4px;">
+                <button class="copy-btn" onclick="event.stopPropagation(); shareSpecificLink('bank', ${index}, this)" title="${t.shareLink}">
+                  ${shareLinkIcon}
+                </button>
+                <button class="copy-btn" onclick="event.stopPropagation(); shareBank(${index}, this)" title="${t.share}">
+                  ${copyIcon}
+                </button>
+              </div>
             </div>
-            <div class="chevron" style="margin-left: 10px;">
+            <div class="chevron ${isHighlighted ? 'rotate' : ''}" style="margin-left: 10px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </div>
           </div>
-          <div class="accordion-content">
+          <div class="accordion-content ${isHighlighted ? 'open' : ''}">
             <div class="bank-grid">
               <div class="label">A/C NAME <span>:</span></div><div class="value">${b.name}</div>
               <div class="label">A/C NO <span>:</span></div>
@@ -713,23 +784,29 @@
         const isVisible = cardVisible[index];
         const btnText = isVisible ? t.hide : t.show;
         const displayCard = isVisible ? c.card : formatAccount(c.card);
+        const isHighlighted = highlightedItemId === 'card-' + index;
         return `
-        <div class="info-card">
+        <div class="info-card ${isHighlighted ? 'highlighted-item is-open' : ''}" id="item-card-${index}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="card-header" style="margin-bottom: 0; flex: 1;">
               <span class="bank-header">
                 <img src="${c.img}" alt="${c.bank}" class="card-icon">
                 ${c.bank}
               </span>
-              <button class="copy-btn" onclick="event.stopPropagation(); shareCard(${index}, this)" title="${t.share}">
-                ${copyIcon}
-              </button>
+              <div style="display: flex; gap: 4px;">
+                <button class="copy-btn" onclick="event.stopPropagation(); shareSpecificLink('card', ${index}, this)" title="${t.shareLink}">
+                  ${shareLinkIcon}
+                </button>
+                <button class="copy-btn" onclick="event.stopPropagation(); shareCard(${index}, this)" title="${t.share}">
+                  ${copyIcon}
+                </button>
+              </div>
             </div>
-            <div class="chevron" style="margin-left: 10px;">
+            <div class="chevron ${isHighlighted ? 'rotate' : ''}" style="margin-left: 10px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </div>
           </div>
-          <div class="accordion-content">
+          <div class="accordion-content ${isHighlighted ? 'open' : ''}">
             <div class="bank-grid">
               <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${isVisible ? displayHyphens(c.card) : displayCard}</div>
               <div class="label">TYPE <span>:</span></div><div class="value">${c.type}</div>
@@ -814,12 +891,51 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      highlightedItemId = urlParams.get('item');
+      if (highlightedItemId) {
+        document.body.classList.add('blur-active');
+      }
+
       // Setup time updater
       setInterval(updateTime, 1000);
 
       // If no language chosen yet, wait for user
       // Elements are hidden by default via CSS container not having "show" class
     });
+
+    function clearFocus() {
+      highlightedItemId = null;
+      document.body.classList.remove('blur-active');
+      const clearBtn = document.getElementById('clearFocusBtn');
+      if (clearBtn) clearBtn.style.display = 'none';
+
+      document.querySelectorAll('.highlighted-item').forEach(el => {
+        el.classList.remove('highlighted-item');
+      });
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete('item');
+      window.history.replaceState({}, '', url);
+    }
+
+    function shareSpecificLink(type, index, btn) {
+      const itemId = `${type}-${index}`;
+      const url = new URL(window.location.href);
+      url.searchParams.set('item', itemId);
+
+      navigator.clipboard.writeText(url.toString()).then(() => showToast(translations[currentLang].copied));
+
+      if (btn) {
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML = checkIcon;
+        btn.style.color = "#2ecc71";
+        setTimeout(() => {
+          btn.innerHTML = originalIcon;
+          btn.style.color = "";
+        }, 2000);
+      }
+    }
 
     function copyAcc(text) {
       navigator.clipboard.writeText(text).then(() => showToast(translations[currentLang].copied));
