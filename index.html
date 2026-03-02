@@ -313,6 +313,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
     }
 
     .copy-btn:hover {
@@ -323,6 +326,12 @@
     .copy-btn svg {
       width: 18px;
       height: 18px;
+    }
+
+    .info-card.is-open .copy-btn {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
     }
 
     .bank-grid {
@@ -870,6 +879,7 @@
       const content = header.nextElementSibling;
       const chevron = header.querySelector('.chevron');
       const isOpen = content.classList.contains('open');
+      const infoCard = header.closest('.info-card');
 
       // Close all other accordions in the same list
       const list = header.closest('#bankList, #cardList, #generalList');
@@ -878,12 +888,14 @@
           if (openContent !== content) {
             openContent.classList.remove('open');
             openContent.previousElementSibling.querySelector('.chevron').classList.remove('rotate');
+            openContent.closest('.info-card').classList.remove('is-open');
           }
         });
       }
 
       content.classList.toggle('open');
       chevron.classList.toggle('rotate');
+      infoCard.classList.toggle('is-open');
     }
 
     function shareBank(index, btn) {
