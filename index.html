@@ -526,25 +526,27 @@
     #clearFocusBtn {
       display: none;
       position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
+      top: 20px;
+      left: 20px;
       z-index: 10001;
-      padding: 12px 25px;
-      border-radius: 30px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      background: #3498db;
-      color: white;
-      font-weight: bold;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      color: #333;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       cursor: pointer;
-      border: none;
+      border: 1px solid #eee;
+      display: flex;
+      /* overridden by inline style if none */
+      align-items: center;
+      justify-content: center;
       transition: all 0.3s ease;
-      font-size: 0.95rem;
     }
 
     #clearFocusBtn:hover {
-      background: #2980b9;
-      transform: translateX(-50%) translateY(-2px);
+      background: #f1f2f6;
+      transform: scale(1.05);
     }
   </style>
 </head>
@@ -560,7 +562,13 @@
     </div>
   </div>
 
-  <button id="clearFocusBtn" onclick="clearFocus()"></button>
+  <button id="clearFocusBtn" onclick="clearFocus()" style="display: none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+      <path
+        d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z">
+      </path>
+    </svg>
+  </button>
 
   <div class="container" id="mainContainer">
     <h1 data-key="title">M/S Bhai Bhai Traders</h1>
@@ -598,7 +606,6 @@
         copied: "Copied!",
         share: "Copy Details",
         shareLink: "Copy Link",
-        viewAll: "View All Information",
         rights: "M/S Bhai Bhai Traders. All rights reserved."
       },
       bn: {
@@ -616,7 +623,6 @@
         copied: "কপি করা হয়েছে!",
         share: "তথ্য কপি করুন",
         shareLink: "লিঙ্ক কপি করুন",
-        viewAll: "সব তথ্য দেখুন",
         rights: "মেসার্স ভাই ভাই ট্রেডার্স - সর্বস্বত্ব সংরক্ষিত।"
       }
     };
@@ -713,7 +719,6 @@
       });
 
       const clearBtn = document.getElementById('clearFocusBtn');
-      if (clearBtn) clearBtn.textContent = translations[lang].viewAll;
 
       renderContent();
 
@@ -725,7 +730,7 @@
         document.getElementById('mainContainer').classList.add('show');
 
         if (highlightedItemId) {
-          if (clearBtn) clearBtn.style.display = 'block';
+          if (clearBtn) clearBtn.style.display = 'flex';
 
           const target = document.getElementById('item-' + highlightedItemId);
           if (target) {
