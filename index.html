@@ -215,6 +215,15 @@
       margin-bottom: 0;
     }
 
+    .contact-role {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      margin-bottom: 12px;
+      font-weight: 500;
+      display: block;
+    }
+
     .copy-btn {
       background: transparent;
       border: none;
@@ -564,7 +573,7 @@
       document.getElementById('contactList').innerHTML = myContacts.map(c => `
         <div class="info-card">
           <span class="bank-header">${c[currentLang].name}</span>
-          <div style="color:#888; font-size:0.85rem; margin-top:${currentLang === 'bn' ? '0' : '-8px'}; margin-bottom:10px;">${c[currentLang].role}</div>
+          <div class="contact-role">${c[currentLang].role}</div>
           <a href="tel:${c.phone}" class="btn btn-primary">${t.callNow}</a>
         </div>
       `).join('');
