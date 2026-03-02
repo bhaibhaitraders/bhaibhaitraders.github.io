@@ -213,6 +213,30 @@
       font-weight: bold;
       font-size: 1.1rem;
       margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .contact-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+
+    .contact-img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #f0f0f0;
+    }
+
+    .card-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
     }
 
     .contact-role {
@@ -475,27 +499,29 @@
 
     const myContacts = [
       {
-        en: { name: "MD. ABUL KALAM AZAD (LABU)", role: "Proprietor" },
+        en: { name: "MD. ABUL KALAM AZAD (LABU)", role: "<strong>Proprietor</strong>" },
         bn: { name: "প্রোঃ মোঃ আবুল কালাম আজাদ (লেবু)", role: "<strong>স্বত্বাধিকারী</strong>" },
-        phone: "+8801736780197"
+        phone: "+8801736780197",
+        img: "bin/contacts/proprietor.png"
       },
       {
         en: { name: "TANVIR HASAN (NIJHOM)", role: "Accountant" },
         bn: { name: "তানভীর হাসান ( নিঝুম )", role: "<strong>হিসাবরক্ষক</strong>" },
-        phone: "+8801735404034"
+        phone: "+8801735404034",
+        img: "bin/contacts/accountant.png"
       }
     ];
 
     const myBanks = [
-      { bank: "BRAC Bank PLC (1)", name: "M/S BHAI BHAI TRADERS", acc: "0000000000", branch: "PLACEHOLDER", routing: "", swift: "PLACEHOLDER" },
-      { bank: "BRAC Bank PLC (2)", name: "TANVIR HASAN", acc: "1057305720001", branch: "TANGAIL BRANCH", routing: "060932305", swift: "BRAKBDDH" },
-      { bank: "City Bank PLC", name: "M/S BHAI BHAI TRADERS", acc: "1503353045001", branch: "GHATAIL SUB BRANCH", routing: "", swift: "CIBLBDDH" }
+      { bank: "BRAC Bank PLC (1)", name: "M/S BHAI BHAI TRADERS", acc: "0000000000", branch: "PLACEHOLDER", routing: "", swift: "PLACEHOLDER", img: "bin/bank/bank.png" },
+      { bank: "BRAC Bank PLC (2)", name: "TANVIR HASAN", acc: "1057305720001", branch: "TANGAIL BRANCH", routing: "060932305", swift: "BRAKBDDH", img: "bin/bank/bank.png" },
+      { bank: "City Bank PLC", name: "M/S BHAI BHAI TRADERS", acc: "1503353045001", branch: "GHATAIL SUB BRANCH", routing: "", swift: "CIBLBDDH", img: "bin/bank/bank.png" }
     ];
 
     const myCards = [
-      { bank: "VISA (1)", card: "4777920800060917", type: "Debit", network: "Visa" },
-      { bank: "VISA (2)", card: "0000000000", type: "Debit", network: "Visa" },
-      { bank: "American Express", card: "371599122322771", type: "Debit", network: "American Express" }
+      { bank: "VISA (1)", card: "4777920800060917", type: "Debit", network: "Visa", img: "bin/card/visa.png" },
+      { bank: "VISA (2)", card: "0000000000", type: "Debit", network: "Visa", img: "bin/card/visa.png" },
+      { bank: "American Express", card: "371599122322771", type: "Debit", network: "American Express", img: "bin/card/amex.png" }
     ];
 
     function formatAccount(acc) {
@@ -526,12 +552,14 @@
       {
         en: { type: "Email", value: "info@bhaibhaitraders.com", label: "Send Email" },
         bn: { type: "ই-মেইল", value: "info@bhaibhaitraders.com", label: "ই-মেইল পাঠান" },
-        action: "mailto:bhaibhaitraders2024@gmail.com"
+        action: "mailto:bhaibhaitraders2024@gmail.com",
+        img: "bin/general/email.png"
       },
       {
         en: { type: "Address", value: "Raktipara Bus Stand, Madhupur, Tangail", label: "View on Google Maps" },
         bn: { type: "ঠিকানা", value: "রক্তিপাড়া বাসস্ট্যান্ড, মধুপুর, টাঙ্গাইল।", label: "গুগল ম্যাপে দেখুন" },
-        action: "https://maps.app.goo.gl/XDMBKiriLQUUtSB86"
+        action: "https://maps.app.goo.gl/XDMBKiriLQUUtSB86",
+        img: "bin/general/address.png"
       }
     ];
 
@@ -572,8 +600,13 @@
       // Contacts
       document.getElementById('contactList').innerHTML = myContacts.map(c => `
         <div class="info-card">
-          <span class="bank-header">${c[currentLang].name}</span>
-          <div class="contact-role">${c[currentLang].role}</div>
+          <div class="contact-header">
+            <img src="${c.img}" alt="${c[currentLang].name}" class="contact-img">
+            <div class="contact-info">
+              <span class="bank-header" style="gap: 0;">${c[currentLang].name}</span>
+              <div class="contact-role" style="margin-bottom: 0;">${c[currentLang].role}</div>
+            </div>
+          </div>
           <a href="tel:${c.phone}" class="btn btn-primary">${t.callNow}</a>
         </div>
       `).join('');
@@ -586,7 +619,10 @@
         return `
         <div class="info-card">
           <div class="card-header">
-            <span class="bank-header">${b.bank}</span>
+            <span class="bank-header">
+              <img src="${b.img}" alt="${b.bank}" class="card-icon">
+              ${b.bank}
+            </span>
             <button class="copy-btn" onclick="shareBank(${index}, this)" title="${t.share}">
               ${copyIcon}
             </button>
@@ -610,7 +646,10 @@
         return `
         <div class="info-card">
           <div class="card-header">
-            <span class="bank-header">${c.bank}</span>
+            <span class="bank-header">
+              <img src="${c.img}" alt="${c.bank}" class="card-icon">
+              ${c.bank}
+            </span>
             <button class="copy-btn" onclick="shareCard(${index}, this)" title="${t.share}">
               ${copyIcon}
             </button>
@@ -628,7 +667,12 @@
       // General Info
       document.getElementById('generalList').innerHTML = generalInfo.map(g => `
         <div class="info-card">
-          <span class="bank-header" style="color:#333; font-size:1rem;">${g[currentLang].type}</span>
+          <div class="card-header">
+            <span class="bank-header" style="color:#333; font-size:1rem;">
+              <img src="${g.img}" alt="${g[currentLang].type}" class="card-icon">
+              ${g[currentLang].type}
+            </span>
+          </div>
           <div style="color:#666; font-size:0.85rem; margin-top:-5px; margin-bottom:10px;">${g[currentLang].value}</div>
           <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
         </div>
