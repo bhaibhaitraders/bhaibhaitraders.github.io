@@ -493,6 +493,11 @@
     }
 
     /* Focus Mode for Shared Links */
+    body.blur-active {
+      overflow: hidden;
+      height: 100vh;
+    }
+
     body.blur-active .container>h1,
     body.blur-active .container>.subtitle,
     body.blur-active .container>h2,
@@ -896,7 +901,11 @@
       const urlParams = new URLSearchParams(window.location.search);
       highlightedItemId = urlParams.get('item');
       if (highlightedItemId) {
-        document.body.classList.add('blur-active');
+        // Delay adding the blur-active class slightly so that `scrollIntoView` 
+        // works correctly, as overflow: hidden on body can block scrolling on some browsers
+        setTimeout(() => {
+          document.body.classList.add('blur-active');
+        }, 500);
       }
 
       // Setup time updater
