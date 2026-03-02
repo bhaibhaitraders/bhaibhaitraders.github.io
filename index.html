@@ -938,6 +938,19 @@
       // Setup time updater
       setInterval(updateTime, 1000);
 
+      // Re-center the highlighted item after orientation change / resize
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        if (!highlightedItemId) return;
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const target = document.getElementById('item-' + highlightedItemId);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 200);
+      });
+
       // If a language is encoded in the URL (from a shared Focus Mode link),
       // skip the language selection overlay and load directly in that language.
       if (highlightedItemId && langParam && translations[langParam]) {
