@@ -682,7 +682,9 @@
         copied: "Copied!",
         share: "Copy Details",
         shareLink: "Copy Link",
-        rights: "M/S Bhai Bhai Traders. All rights reserved."
+        rights: "M/S Bhai Bhai Traders. All rights reserved.",
+        liveWebsite: "Live Website",
+        downloadApp: "Download App"
       },
       bn: {
         title: "মেসার্স ভাই ভাই ট্রেডার্স",
@@ -699,7 +701,9 @@
         copied: "কপি করা হয়েছে!",
         share: "তথ্য কপি করুন",
         shareLink: "লিঙ্ক কপি করুন",
-        rights: "মেসার্স ভাই ভাই ট্রেডার্স - সর্বস্বত্ব সংরক্ষিত।"
+        rights: "মেসার্স ভাই ভাই ট্রেডার্স - সর্বস্বত্ব সংরক্ষিত।",
+        liveWebsite: "লাইভ ওয়েবসাইট",
+        downloadApp: "অ্যাপ ডাউনলোড করুন"
       }
     };
 
@@ -768,6 +772,25 @@
         bn: { type: "ঠিকানা", value: "রক্তিপাড়া বাসস্ট্যান্ড, মধুপুর, টাঙ্গাইল।", label: "গুগল ম্যাপে দেখুন" },
         action: "https://maps.app.goo.gl/XDMBKiriLQUUtSB86",
         img: "bin/images/general/address.png"
+      },
+      {
+        en: {
+          type: "Inventory Management",
+          value: "This inventory management apps help us to keep the live inventory status, this also keep the historical stock data and this thing can generate sales report",
+          actions: [
+            { label: "Live Website", link: "https://stock.tanvir.info/", type: "secondary" },
+            { label: "Download App", link: "bin/app/app-release.apk", type: "primary", download: "app-release.apk" }
+          ]
+        },
+        bn: {
+          type: "ইনভেন্টরি ম্যানেজমেন্ট",
+          value: "এই ইনভেন্টরি ম্যানেজমেন্ট অ্যাপটি আমাদের লাইভ ইনভেন্টরি স্ট্যাটাস রাখতে সাহায্য করে, এটি ঐতিহাসিক স্টকের ডেটাও রাখে এবং এটি বিক্রয় প্রতিবেদন তৈরি করতে পারে।",
+          actions: [
+            { label: "লাইভ ওয়েবসাইট", link: "https://stock.tanvir.info/", type: "secondary" },
+            { label: "অ্যাপ ডাউনলোড করুন", link: "bin/app/app-release.apk", type: "primary", download: "app-release.apk" }
+          ]
+        },
+        img: "bin/images/general/inventory.png"
       }
     ];
 
@@ -960,7 +983,11 @@
           </div>
           <div class="accordion-content ${isOpen ? 'open' : ''}">
             <div style="color:#666; font-size:0.9rem; line-height:1.4; margin-bottom:15px; word-wrap:break-word; overflow-wrap:break-word;">${g[currentLang].value}</div>
-            <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
+            ${g[currentLang].actions ? g[currentLang].actions.map(a => `
+              <a href="${a.link}" target="_blank" class="btn btn-${a.type || 'secondary'}" ${a.download ? `download="${a.download}"` : ''} style="margin-bottom: 8px; display: block; text-align: center;">${a.label}</a>
+            `).join('') : `
+              <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
+            `}
           </div>
         </div>
       `}).join('');
