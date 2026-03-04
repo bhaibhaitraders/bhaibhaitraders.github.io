@@ -776,6 +776,7 @@
     const shareLinkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>`;
 
     let highlightedItemId = null;
+    const openAccordions = new Set();
 
     /* Whether the initial language has been chosen yet */
     let langInitialised = false;
@@ -857,12 +858,15 @@
 
       // Banks (Data stays intact, just buttons translate)
       document.getElementById('bankList').innerHTML = myBanks.map((b, index) => {
+        const itemId = `item-bank-${index}`;
         const isVisible = accVisible[index];
         const btnText = isVisible ? t.hide : t.show;
         const displayAcc = isVisible ? b.acc : formatAccount(b.acc);
         const isHighlighted = highlightedItemId === 'bank-' + index;
+        const isOpen = openAccordions.has(itemId) || isHighlighted;
+
         return `
-        <div class="info-card ${isHighlighted ? 'highlighted-item is-open' : ''}" id="item-bank-${index}">
+        <div class="info-card ${isOpen ? 'highlighted-item is-open' : ''}" id="${itemId}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="card-header" style="margin-bottom: 0; flex: 1;">
               <span class="bank-header">
@@ -878,11 +882,11 @@
                 </button>
               </div>
             </div>
-            <div class="chevron ${isHighlighted ? 'rotate' : ''}" style="margin-left: 10px;">
+            <div class="chevron ${isOpen ? 'rotate' : ''}" style="margin-left: 10px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </div>
           </div>
-          <div class="accordion-content ${isHighlighted ? 'open' : ''}">
+          <div class="accordion-content ${isOpen ? 'open' : ''}">
             <div class="bank-grid">
               <div class="label">A/C NAME <span>:</span></div><div class="value">${b.name}</div>
               <div class="label">A/C NO <span>:</span></div>
@@ -897,12 +901,15 @@
 
       // Cards (Data stays intact, just buttons translate)
       document.getElementById('cardList').innerHTML = myCards.map((c, index) => {
+        const itemId = `item-card-${index}`;
         const isVisible = cardVisible[index];
         const btnText = isVisible ? t.hide : t.show;
         const displayCard = isVisible ? c.card : formatAccount(c.card);
         const isHighlighted = highlightedItemId === 'card-' + index;
+        const isOpen = openAccordions.has(itemId) || isHighlighted;
+
         return `
-        <div class="info-card ${isHighlighted ? 'highlighted-item is-open' : ''}" id="item-card-${index}">
+        <div class="info-card ${isOpen ? 'highlighted-item is-open' : ''}" id="${itemId}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="card-header" style="margin-bottom: 0; flex: 1;">
               <span class="bank-header">
@@ -918,11 +925,11 @@
                 </button>
               </div>
             </div>
-            <div class="chevron ${isHighlighted ? 'rotate' : ''}" style="margin-left: 10px;">
+            <div class="chevron ${isOpen ? 'rotate' : ''}" style="margin-left: 10px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </div>
           </div>
-          <div class="accordion-content ${isHighlighted ? 'open' : ''}">
+          <div class="accordion-content ${isOpen ? 'open' : ''}">
             <div class="bank-grid">
               <div class="label">CARD NO <span>:</span></div><div class="value acc-highlight" id="card-${index}">${isVisible ? displayHyphens(c.card) : displayCard}</div>
               <div class="label">TYPE <span>:</span></div><div class="value">${c.type}</div>
@@ -935,8 +942,11 @@
       `}).join('');
 
       // General Info
-      document.getElementById('generalList').innerHTML = generalInfo.map(g => `
-        <div class="info-card">
+      document.getElementById('generalList').innerHTML = generalInfo.map((g, index) => {
+        const itemId = `item-general-${index}`;
+        const isOpen = openAccordions.has(itemId);
+        return `
+        <div class="info-card ${isOpen ? 'is-open' : ''}" id="${itemId}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="card-header" style="margin-bottom: 0; flex: 1;">
               <span class="bank-header">
@@ -944,16 +954,16 @@
                 ${g[currentLang].type}
               </span>
             </div>
-            <div class="chevron" style="margin-left: 10px;">
+            <div class="chevron ${isOpen ? 'rotate' : ''}" style="margin-left: 10px;">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </div>
           </div>
-          <div class="accordion-content">
+          <div class="accordion-content ${isOpen ? 'open' : ''}">
             <div style="color:#666; font-size:0.9rem; line-height:1.4; margin-bottom:15px; word-wrap:break-word; overflow-wrap:break-word;">${g[currentLang].value}</div>
             <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
           </div>
         </div>
-      `).join('');
+      `}).join('');
 
       updateTime();
     }
@@ -1150,13 +1160,22 @@
       // Close all other accordions in the same list
       const list = header.closest('#bankList, #cardList, #generalList');
       if (list) {
-        list.querySelectorAll('.accordion-content.open').forEach(openContent => {
-          if (openContent !== content) {
-            openContent.classList.remove('open');
-            openContent.previousElementSibling.querySelector('.chevron').classList.remove('rotate');
-            openContent.closest('.info-card').classList.remove('is-open');
+        list.querySelectorAll('.info-card').forEach(card => {
+          if (card !== infoCard) {
+            openAccordions.delete(card.id);
+            const cardContent = card.querySelector('.accordion-content');
+            if (cardContent) cardContent.classList.remove('open');
+            const cardChevron = card.querySelector('.chevron');
+            if (cardChevron) cardChevron.classList.remove('rotate');
+            card.classList.remove('is-open');
           }
         });
+      }
+
+      if (isOpen) {
+        openAccordions.delete(infoCard.id);
+      } else {
+        openAccordions.add(infoCard.id);
       }
 
       content.classList.toggle('open');
