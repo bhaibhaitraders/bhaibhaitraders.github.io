@@ -684,7 +684,8 @@
         shareLink: "Copy Link",
         rights: "M/S Bhai Bhai Traders. All rights reserved.",
         liveWebsite: "Live Website",
-        downloadApp: "Download App"
+        downloadApp: "Download App",
+        downloadConfirm: "Do you want to download the app?"
       },
       bn: {
         title: "মেসার্স ভাই ভাই ট্রেডার্স",
@@ -703,7 +704,8 @@
         shareLink: "লিঙ্ক কপি করুন",
         rights: "মেসার্স ভাই ভাই ট্রেডার্স - সর্বস্বত্ব সংরক্ষিত।",
         liveWebsite: "লাইভ ওয়েবসাইট",
-        downloadApp: "অ্যাপ ডাউনলোড করুন"
+        downloadApp: "অ্যাপ ডাউনলোড করুন",
+        downloadConfirm: "আপনি কি অ্যাপটি ডাউনলোড করতে চান?"
       }
     };
 
@@ -984,7 +986,7 @@
           <div class="accordion-content ${isOpen ? 'open' : ''}">
             <div style="color:#666; font-size:0.9rem; line-height:1.4; margin-bottom:15px; word-wrap:break-word; overflow-wrap:break-word;">${g[currentLang].value}</div>
             ${g[currentLang].actions ? g[currentLang].actions.map(a => `
-              <a href="${a.link}" target="_blank" class="btn btn-${a.type || 'secondary'}" ${a.download ? `download="${a.download}"` : ''} style="margin-bottom: 8px; display: block; text-align: center;">${a.label}</a>
+              <a href="${a.link}" target="_blank" class="btn btn-${a.type || 'secondary'}" ${a.download ? `download="${a.download}" onclick="return confirm(translations[currentLang].downloadConfirm)"` : ''} style="margin-bottom: 8px; display: block; text-align: center;">${a.label}</a>
             `).join('') : `
               <a href="${g.action}" target="_blank" class="btn btn-secondary">${g[currentLang].label}</a>
             `}
