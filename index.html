@@ -910,7 +910,7 @@
         const isOpen = openAccordions.has(itemId) || isHighlighted;
 
         return `
-        <div class="info-card ${isOpen ? 'highlighted-item is-open' : ''}" id="${itemId}">
+        <div class="info-card ${isHighlighted ? 'highlighted-item ' : ''}${isOpen ? 'is-open' : ''}" id="${itemId}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="card-header" style="margin-bottom: 0; flex: 1;">
               <span class="bank-header">
@@ -936,6 +936,8 @@
               <div class="label">A/C NO <span>:</span></div>
               <div class="value acc-highlight" id="acc-${index}">${isVisible ? displayHyphens(b.acc) : displayAcc}</div>
               <div class="label">BRANCH <span>:</span></div><div class="value">${b.branch}</div>
+              <div class="label">ROUTING <span>:</span></div><div class="value">${b.routing}</div>
+              <div class="label">SWIFT <span>:</span></div><div class="value">${b.swift}</div>
             </div>
             <button class="btn btn-toggle" id="toggle-acc-${index}" onclick="toggleAcc(${index}, '${b.acc}')">${btnText}</button>
             <button class="btn btn-secondary" onclick="copyAcc('${b.acc}')">${t.copyAcc}</button>
@@ -953,7 +955,7 @@
         const isOpen = openAccordions.has(itemId) || isHighlighted;
 
         return `
-        <div class="info-card ${isOpen ? 'highlighted-item is-open' : ''}" id="${itemId}">
+        <div class="info-card ${isHighlighted ? 'highlighted-item ' : ''}${isOpen ? 'is-open' : ''}" id="${itemId}">
           <div class="accordion-header" onclick="toggleAccordion(this)">
             <div class="card-header" style="margin-bottom: 0; flex: 1;">
               <span class="bank-header">
@@ -1233,7 +1235,7 @@
 
     function shareBank(index, btn) {
       const b = myBanks[index];
-      const text = `${b.bank}\nA/C NAME : ${b.name}\nA/C NO : ${b.acc}\nBRANCH : ${b.branch}`;
+      const text = `${b.bank}\nA/C NAME : ${b.name}\nA/C NO : ${b.acc}\nBRANCH : ${b.branch}\nROUTING : ${b.routing}\nSWIFT : ${b.swift}`;
       copyAcc(text);
       if (btn) {
         const originalIcon = btn.innerHTML;
